@@ -5,7 +5,7 @@ const app = express();
 // store config variables in dotenv
 require('dotenv').config();
 schema = require('./schema/mongoDBSchema'); // uncomment this for MONGODB
-//schema = require('./schema/mysqlDBSchema'); // uncomment this for MONGODB
+//schema = require('./schema/mysqlDBSchema'); // uncomment this for MYSQLDB
 
 // ****** Set up default mongoose connection START ****** //
 const mongoose = require('mongoose');
