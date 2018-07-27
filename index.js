@@ -4,8 +4,8 @@ const cors = require('cors');
 const app = express();
 // store config variables in dotenv
 require('dotenv').config();
-//schema = require('./schema/mongoDBSchema'); // uncomment this for MONGODB
-schema = require('./schema/mysqlDBSchema'); // uncomment this for MONGODB
+schema = require('./schema/mongoDBSchema'); // uncomment this for MONGODB
+//schema = require('./schema/mysqlDBSchema'); // uncomment this for MONGODB
 
 // ****** Set up default mongoose connection START ****** //
 const mongoose = require('mongoose');
@@ -20,9 +20,8 @@ mongoose.connection.once('open', () => {
 // ****** Set up default mongoose connection END ****** //
 
 // ****** allow cross-origin requests code START ****** //
-app.use(cors()); // uncomment this to enable all CORS and delete cors(corsOptions) in below code
+//app.use(cors()); // uncomment this to enable all CORS and delete cors(corsOptions) in below code
 var allowedOrigins = process.env.allowedOrigins.split(',');
-/** 
 app.use(cors({
     origin: function (origin, callback) {
         // allow requests with no origin 
@@ -36,7 +35,6 @@ app.use(cors({
         return callback(null, true);
     }
 }));
-*/
 // ****** allow cross-origin requests code END ****** //
 
 // bind express with graphql
