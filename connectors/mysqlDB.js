@@ -71,6 +71,7 @@ const loginUser_C = input => {
   return User.findOne({
     where: { email: input.email, password: input.password }
   }).then((res) => {
+    if(res.length > 0) {
     return [{
       password: jwt.sign(
         { id: res.dataValues.id, email: res.dataValues.email, name: res.dataValues.name },
@@ -79,16 +80,24 @@ const loginUser_C = input => {
       )
     }];
   }
+}
   );
   // do not feed password back to query, password stays in database
 }
-
 const addUser_C = input => {
   input.roles = ["dummy"]; // assign a dummy roles at first time user is created
-  return User.create({ name: input.name, email: input.email, password: input.password, roles: input.roles.join(',') }).then((res) => {
-    return input;
-  }
-  );
+  let user = new User(input);
+  return User.findOne({
+    where: { email: input.email }
+  }).then((res) => {
+    if(res) {
+      return {name:"",email:"", password: ""};
+    } else {
+      return User.create({ name: input.name, email: input.email, password: input.password, roles: input.roles.join(',') }).then((res) => {
+        return input;
+      });
+    }
+  });
 }
 
 const updateUser_C = input => {

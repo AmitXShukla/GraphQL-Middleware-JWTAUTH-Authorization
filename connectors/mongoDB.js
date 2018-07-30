@@ -16,6 +16,7 @@ const loginUser_C = input => {
   return User.find({ email: input.email, password: input.password }).then((res) => {
     //after successfull login, return JWT token
     // do not feed password back to query, password stays in database
+    if(res.length > 0) {
     res[0].password = jwt.sign(
                   { id: res[0].id, email: res[0].email, name:res[0].name },
                     process.env.JWT_SECRET,
@@ -23,13 +24,21 @@ const loginUser_C = input => {
                   );
     return res;
   }
+}
   );
 }
 
 const addUser_C = input => {
   input.roles = ["dummy"]; // assign a dummy roles at first time user is created
   let user = new User(input);
-  return user.save();
+  return User.find({ email: input.email }).then((res) => {
+    if(res.length > 0) {
+      return {name:"",email:"", password: ""};
+    } else {
+      user.save();
+      return input
+    }
+  });
 }
 
 const updateUser_C = input => {
