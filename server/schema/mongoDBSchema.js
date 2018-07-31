@@ -1,6 +1,6 @@
 const { makeExecutableSchema } = require('graphql-tools');
 const { // define resolvers
-  authenticateUser_R,
+  getUser_R,
   checkUserExists_R,
   loginUser_R,
   addUser_R,
@@ -8,7 +8,7 @@ const { // define resolvers
   updateUserAdmin_R
 } = require('.././resolvers/mongoDBResolver');
 const { // define mongodb connectors
-  authenticateUser_C,
+  getUser_C,
   checkUserExists_C,
   loginUser_C,
   addUser_C,
@@ -25,34 +25,39 @@ const typeDefs = `
     name: String!
     email: String!
     password: String!
+  }
+  type Role {
     roles: [String]!
+  }
+  type UserPref {
+    name: String!
+    email: String!
   }
   type UserExists {
     name: String!
     email: String!
-    roles: [String]!
   }
   type LoginUser {
-    password: String!
+    token: String!
   }
   type Token {
     token: String!
   }
   type Query {
-    authenticateUser_Q: [User]
-    checkUserExists_Q(email:String!): [UserExists]
-    loginUser_Q(email:String!,password:String!): [LoginUser]
+    getUser_Q: UserExists
+    checkUserExists_Q(email:String!): UserExists
+    loginUser_Q(email:String!,password:String!): LoginUser
   }
   type Mutation {
     addUser_M(name:String!,email:String!,password:String!): User
-    updateUser_M(name:String!,email:String!,password:String!): User
-    updateUserAdmin_M(id:String!,roles:[String!]!): User
+    updateUser_M(name:String!,email:String!,password:String!): UserPref
+    updateUserAdmin_M(id:String!,roles:[String!]!): Role
   }
 `;
 
 const resolvers = {
   Query: {
-    authenticateUser_Q: (_, args, context) => authenticateUser_R(context, authenticateUser_C),
+    getUser_Q: (_, args, context) => getUser_R(context, getUser_C),
     checkUserExists_Q: (_, args, context) => checkUserExists_R(args, checkUserExists_C), //check if user email already exists, for new user id creation
     loginUser_Q: (_, args, context) => loginUser_R(args, loginUser_C)
   },

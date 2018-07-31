@@ -27,7 +27,3 @@ open an browser window on browse to<br />
 <h2>Setup CORS</h2>
 <h2>Setup Database</h2>
 <h2>Setup Authentication and Authorization</h2>
-
-// detail steps <br /><br />
-$ npm init // answer all the questions appearing in command prompts <br />
-$ npm install express express-graphql graphql lodash cors mongoose express-jwt jwt-decode jsonwebtoken dotenv mysql2 sequelize--save <br />

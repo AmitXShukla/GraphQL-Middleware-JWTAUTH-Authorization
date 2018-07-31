@@ -5,7 +5,7 @@ const app = express();
 // store config variables in dotenv
 require('dotenv').config();
 schema = require('./schema/mongoDBSchema'); // uncomment this for MONGODB
-//schema = require('./schema/mysqlDBSchema'); // uncomment this for MYSQLDB
+//schema = require('./schema/mysqlDBSchema'); // uncomment this for MONGODB
 
 // ****** Set up default mongoose connection START ****** //
 const mongoose = require('mongoose');
@@ -40,8 +40,8 @@ app.use(cors({
 // bind express with graphql
 app.use('/graphql', graphqlHTTP({
     schema, // this is setup to use MONGODB for now
-    //graphiql: false
-    graphiql: true
+    graphiql: false
+    //graphiql: true
 }));
 app.use('/', (req, res) => res.send("Welcome ElishERP User"));
 app.listen(process.env.GRAPHQLPORT, () => console.log('Elish Enterprise Server is ready on localhost:' + process.env.GRAPHQLPORT));

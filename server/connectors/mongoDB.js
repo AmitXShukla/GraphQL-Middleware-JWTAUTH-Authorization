@@ -4,25 +4,33 @@ const User = require('../models/mongoDB/user');
 const _ = require('lodash');
 const { noRoleError } = require('./../errors/error');
 
-const authenticateUser_C = user => {
-  return User.find({ _id: user.id }, { roles: 1 }); // do not feed password back to query, password stays in database
+const getUser_C = user => {
+  //return User.find({ _id: user.id }, { roles: 1 }); // do not feed password back to query, password stays in database
+  return User.find({ _id: user.id }).then((res)=> {
+    if(res.length > 0) {
+      return { name:res[0].name, email: res[0].email }
+    } else {
+      return { name:"", email:"" };
+    }
+  });
 };
 const checkUserExists_C = input => {
   return User.find({ email: input.email }, { name:1, email: 1, roles: 1 });
 };
 
 const loginUser_C = input => {
-  // return User.find({ email: input.email, password: input.password }, { id: 1, name: 1, email: 1, roles: 1 },
   return User.find({ email: input.email, password: input.password }).then((res) => {
     //after successfull login, return JWT token
     // do not feed password back to query, password stays in database
     if(res.length > 0) {
-    res[0].password = jwt.sign(
+    pswd = jwt.sign(
                   { id: res[0].id, email: res[0].email, name:res[0].name },
                     process.env.JWT_SECRET,
                   { expiresIn: '3d' }
                   );
-    return res;
+    return {token: pswd};
+  } else {
+    return {token: ""};
   }
 }
   );
@@ -43,17 +51,21 @@ const addUser_C = input => {
 
 const updateUser_C = input => {
   // don't let user update his own role, only admin can update roles
-  User.findByIdAndUpdate(input.id, input, function (err, result) {
+  return User.findByIdAndUpdate(input.id, input, function (err, res) {
     if (err) {
       console.log(err);
     }
-    return input;
+    if(res) {
+      return {name:res.name,email:res.email};
+    } else {
+      return {name:"",email:""};
+    }
   });
 };
 
 const updateUserAdmin_C = input => {
   // don't let user update his own role, only admin can update roles
-  User.findOne({ _id: input.myid }, function (err, docs) {
+  return User.findOne({ _id: input.myid }, function (err, docs) {
     if (err) {
       console.log(err);
     } else {
@@ -73,7 +85,7 @@ const updateUserAdmin_C = input => {
 };
 
 module.exports = {
-  authenticateUser_C,
+  getUser_C,
   checkUserExists_C,
   loginUser_C,
   addUser_C,

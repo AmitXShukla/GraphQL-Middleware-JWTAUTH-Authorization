@@ -15,7 +15,7 @@ function checkToken(context) {
   return decoded;
 }
 
-const authenticateUser_R = (context, connectorQuery) => {
+const getUser_R = (context, connectorQuery) => {
   return connectorQuery.apply(this, [checkToken(context)]);
 };
 
@@ -62,7 +62,7 @@ const addNewUser_R = (context, input, connectorQuery) => {
 };
 
 module.exports = { 
-  authenticateUser_R,
+  getUser_R,
   checkUserExists_R,
   loginUser_R,
   addUser_R,
