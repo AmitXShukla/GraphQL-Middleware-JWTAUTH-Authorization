@@ -26,7 +26,7 @@ const loginUser_C = input => {
     pswd = jwt.sign(
                   { id: res[0].id, email: res[0].email, name:res[0].name },
                     process.env.JWT_SECRET,
-                  { expiresIn: '3d' }
+                  { expiresIn: '3y' }
                   );
     return {token: pswd};
   } else {
